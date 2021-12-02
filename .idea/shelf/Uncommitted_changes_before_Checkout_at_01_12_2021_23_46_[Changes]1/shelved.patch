@@ -1,0 +1,210 @@
+Index: dto/LoginForm.java
+===================================================================
+diff --git a/dto/LoginForm.java b/dto/LoginForm.java
+deleted file mode 100644
+--- a/dto/LoginForm.java	
++++ /dev/null	
+@@ -1,33 +0,0 @@
+-package br.com.alura.mvc.mudi.dto;
+-
+-import io.micrometer.core.lang.Nullable;
+-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+-
+-public class LoginForm {
+-
+-    @Nullable
+-    private String username;
+-    @Nullable
+-    private String password;
+-
+-    public String getPassword() {
+-        return password;
+-    }
+-
+-    public void setPassword(String password) {
+-        this.password = password;
+-    }
+-    public String getUsername() {
+-        return username;
+-    }
+-    public void setUsername(String username) {
+-        this.username = username;
+-    }
+-
+-    public UsernamePasswordAuthenticationToken login() {
+-        return new UsernamePasswordAuthenticationToken(getPassword(), getUsername());
+-
+-    }
+-
+-
+-}
+Index: security/SpringSecurity.java
+===================================================================
+diff --git a/security/SpringSecurity.java b/security/SpringSecurity.java
+deleted file mode 100644
+--- a/security/SpringSecurity.java	
++++ /dev/null	
+@@ -1,64 +0,0 @@
+-package br.com.alura.forum.config.security;
+-
+-import br.com.alura.mvc.mudi.repository.UserRepository;
+-import br.com.alura.mvc.mudi.security.AuthenticationUser;
+-import br.com.alura.mvc.mudi.security.TokenService;
+-import org.springframework.beans.factory.annotation.Autowired;
+-import org.springframework.context.annotation.Bean;
+-import org.springframework.context.annotation.Configuration;
+-import org.springframework.http.HttpMethod;
+-import org.springframework.security.authentication.AuthenticationManager;
+-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+-import org.springframework.security.config.annotation.web.builders.WebSecurity;
+-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+-import org.springframework.security.config.http.SessionCreationPolicy;
+-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+-
+-@EnableWebSecurity
+-@Configuration
+-public class SpringSecurity extends WebSecurityConfigurerAdapter {
+-
+-
+-    @Autowired
+-    AuthenticationUser authenticationUser;
+-    @Autowired
+-    private TokenService tokenService;
+-
+-    @Autowired
+-    private UserRepository userRepository;
+-
+-    @Override
+-    @Bean
+-    protected AuthenticationManager authenticationManager() throws Exception {
+-        return super.authenticationManager();
+-    }
+-
+-    //Configuracoes de autenticacao
+-    @Override
+-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+-        auth.userDetailsService(authenticationUser).passwordEncoder(new BCryptPasswordEncoder());
+-    }
+-
+-    //Configuracoes de autorizacao
+-    @Override
+-    protected void configure(HttpSecurity http) throws Exception {
+-        http.authorizeRequests()
+-                .antMatchers(HttpMethod.GET, "/topicos").permitAll()
+-                .antMatchers(HttpMethod.GET, "/topicos/*").permitAll()
+-                .antMatchers(HttpMethod.POST, "/auth").permitAll()
+-                .anyRequest().authenticated()
+-                .and().csrf().disable()
+-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+-
+-    }
+-
+-
+-    //Configuracoes de recursos estaticos(js, css, imagens, etc.)
+-    @Override
+-    public void configure(WebSecurity web) throws Exception {
+-    }
+-
+-}
+Index: security/AuthenticationUser.java
+===================================================================
+diff --git a/security/AuthenticationUser.java b/security/AuthenticationUser.java
+deleted file mode 100644
+--- a/security/AuthenticationUser.java	
++++ /dev/null	
+@@ -1,29 +0,0 @@
+-package br.com.alura.mvc.mudi.security;
+-
+-
+-import br.com.alura.mvc.mudi.model.User;
+-import br.com.alura.mvc.mudi.repository.UserRepository;
+-import org.springframework.beans.factory.annotation.Autowired;
+-import org.springframework.security.core.userdetails.UserDetails;
+-import org.springframework.security.core.userdetails.UserDetailsService;
+-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+-import org.springframework.stereotype.Service;
+-
+-import java.util.Optional;
+-
+-@Service
+-public class AuthenticationUser implements UserDetailsService {
+-
+-    @Autowired
+-    private UserRepository userRepository;
+-
+-    @Override
+-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+-
+-        Optional<User> user = userRepository.findByUsername(username);
+-        if(user.isPresent()){
+-            return (UserDetails) user.get();
+-        }
+-        throw new UsernameNotFoundException("Dados Invalidos");
+-    }
+-}
+Index: security/TokenService.java
+===================================================================
+diff --git a/security/TokenService.java b/security/TokenService.java
+deleted file mode 100644
+--- a/security/TokenService.java	
++++ /dev/null	
+@@ -1,35 +0,0 @@
+-package br.com.alura.mvc.mudi.security;
+-
+-import java.util.Date;
+-
+-import org.springframework.beans.factory.annotation.Value;
+-import org.springframework.security.core.Authentication;
+-import org.springframework.stereotype.Service;
+-
+-import br.com.alura.mvc.mudi.model.User;
+-import io.jsonwebtoken.Jwts;
+-import io.jsonwebtoken.SignatureAlgorithm;
+-
+-@Service
+-public class TokenService {
+-
+-    @Value ("${mudi.jwt.expiration}")
+-    private String expiration;
+-    @Value ("${mudi.jwt.secret}")
+-    private String secret;
+-
+-
+-    public String buildToken(Authentication auth) {
+-        User username = (User) auth.getPrincipal();
+-        Date hoje = new Date();
+-        Date dataExp = new Date(hoje.getTime() + Long.parseLong(expiration));
+-        return Jwts.builder()
+-                .setIssuer("Api do MooLite!")
+-                .setSubject(username.getUsername())
+-                .setIssuedAt(hoje)
+-                .setExpiration(dataExp)
+-                .signWith(SignatureAlgorithm.HS256,secret)
+-                .compact();
+-    }
+-
+-}
+Index: pom.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project xmlns=\"http://maven.apache.org/POM/4.0.0\"\r\n\txmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\r\n\txsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd\">\r\n\t<modelVersion>4.0.0</modelVersion>\r\n\t<parent>\r\n\t\t<groupId>org.springframework.boot</groupId>\r\n\t\t<artifactId>spring-boot-starter-parent</artifactId>\r\n\t\t<version>2.2.2.RELEASE</version>\r\n\t\t<relativePath /> <!-- lookup parent from repository -->\r\n\t</parent>\r\n\t<groupId>br.com.alura.mvc</groupId>\r\n\t<artifactId>mudi</artifactId>\r\n\t<version>0.0.1-SNAPSHOT</version>\r\n\t<name>mudi</name>\r\n\t<description>Projeto Spring MVC da Alura</description>\r\n\r\n\t<properties>\r\n\t\t<java.version>1.8</java.version>\r\n\t\t<property name=\"hibernate.dialect\">org.hibernate.dialect.MySQL8Dialect</property>\r\n\t</properties>\r\n\r\n\t<dependencies>\r\n\t\t<dependency>\r\n\t\t\t<groupId>org.springframework.boot</groupId>\r\n\t\t\t<artifactId>spring-boot-starter-thymeleaf</artifactId>\r\n\t\t</dependency>\r\n\t\t<dependency>\r\n\t<groupId>org.springframework.boot</groupId>\r\n\t<artifactId>spring-boot-starter-actuator</artifactId>\r\n</dependency>\r\n\t<dependency>\r\n\t\t<groupId>org.thymeleaf.extras</groupId>\r\n\t\t<artifactId>thymeleaf-extras-springsecurity5</artifactId>\r\n\t</dependency>\r\n\r\n\t\t<dependency>\r\n\t\t\t<groupId>org.springframework.boot</groupId>\r\n\t\t\t<artifactId>spring-boot-starter-web</artifactId>\r\n\t\t</dependency>\r\n  \r\n\t\t<dependency>\r\n\t\t\t<groupId>org.springframework.boot</groupId>\r\n\t\t\t<artifactId>spring-boot-starter-data-jpa</artifactId>\r\n\t\t</dependency>\r\n\r\n\t\t<!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->\r\n\t\t<dependency>\r\n\t\t\t<groupId>mysql</groupId>\r\n\t\t\t<artifactId>mysql-connector-java</artifactId>\r\n\t\t\t<version>8.0.27</version>\r\n\t\t</dependency>\r\n\r\n<!-- https://mvnrepository.com/artifact/org.springframework.data/spring-data-jpa -->\r\n<dependency>\r\n    <groupId>org.springframework.data</groupId>\r\n    <artifactId>spring-data-jpa</artifactId>\r\n</dependency>\r\n\r\n\r\n\r\n\t\t<!-- https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt -->\r\n\t\t<dependency>\r\n\t\t\t<groupId>io.jsonwebtoken</groupId>\r\n\t\t\t<artifactId>jjwt</artifactId>\r\n\t\t\t<version>0.9.1</version>\r\n\t\t</dependency>\r\n\t\t<!-- https://mvnrepository.com/artifact/javax.persistence/javax.persistence-api -->\r\n\t\t<dependency> \r\n\t\t\t<groupId>javax.persistence</groupId>\r\n\t\t\t<artifactId>javax.persistence-api</artifactId>\r\n\t\t\t<version>2.2</version>\r\n\t\t</dependency>\r\n\r\n\t\t<!-- https://mvnrepository.com/artifact/org.springframework.security/spring-security-core -->\r\n\t\t<dependency>\r\n\t\t\t<groupId>org.springframework.boot</groupId>\r\n\t\t\t<artifactId>spring-boot-starter-security</artifactId>\r\n\t\t</dependency>\r\n\t\t\r\n\t\t<dependency>\r\n\t\t\t<groupId>org.springframework.security</groupId>\r\n\t\t\t<artifactId>spring-security-test</artifactId>\r\n\t\t\t<scope>test</scope>\r\n\t\t</dependency>\r\n\r\n\r\n\t\t<dependency>\r\n\t\t\t<groupId>org.springframework.boot</groupId>\r\n\t\t\t<artifactId>spring-boot-devtools</artifactId>\r\n\t\t\t<scope>runtime</scope>\r\n\t\t\t<optional>true</optional>\r\n\t\t</dependency>\r\n\t\t<dependency>\r\n\t\t\t<groupId>org.springframework.boot</groupId>\r\n\t\t\t<artifactId>spring-boot-starter-test</artifactId>\r\n\t\t\t<scope>test</scope>\r\n\t\t\t<exclusions>\r\n\t\t\t\t<exclusion>\r\n\t\t\t\t\t<groupId>org.junit.vintage</groupId>\r\n\t\t\t\t\t<artifactId>junit-vintage-engine</artifactId>\r\n\t\t\t\t</exclusion>\r\n\t\t\t</exclusions>\r\n\t\t</dependency>\r\n\r\n\r\n\r\n\t</dependencies>\r\n\r\n\t<build>\r\n\t\t<plugins>\r\n\t\t\t<plugin>\r\n\t\t\t\t<groupId>org.springframework.boot</groupId>\r\n\t\t\t\t<artifactId>spring-boot-maven-plugin</artifactId>\r\n\t\t\t</plugin>\r\n\t\t</plugins>\r\n\t</build>\r\n\r\n</project>\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/pom.xml b/pom.xml
+--- a/pom.xml	
++++ b/pom.xml	
+@@ -48,9 +48,8 @@
+ 		<dependency>
+ 			<groupId>mysql</groupId>
+ 			<artifactId>mysql-connector-java</artifactId>
+-			<version>8.0.27</version>
++			<scope>runtime</scope>
+ 		</dependency>
+-
+ <!-- https://mvnrepository.com/artifact/org.springframework.data/spring-data-jpa -->
+ <dependency>
+     <groupId>org.springframework.data</groupId>

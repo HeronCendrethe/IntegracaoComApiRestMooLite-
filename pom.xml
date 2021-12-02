@@ -48,9 +48,8 @@
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
-			<version>8.0.27</version>
+			<scope>runtime</scope>
 		</dependency>
-
 <!-- https://mvnrepository.com/artifact/org.springframework.data/spring-data-jpa -->
 <dependency>
     <groupId>org.springframework.data</groupId>

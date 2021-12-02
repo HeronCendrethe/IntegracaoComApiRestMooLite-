@@ -1,0 +1,129 @@
+Index: src/main/resources/application.properties
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+># database configs\r\nspring.datasource.url=jdbc:mysql://127.0.0.1:3306/db_springmvc\r\nspring.datasource.username=root\r\nspring.datasource.password=1234\r\nspring.datasource.driverClassName=com.mysql.jdbc.Driver\r\nspring.datasource.testWhileIdle=true\r\nspring.datasource.validationQuery=SELECT 1\r\nspring.jpa.show-sql=true\r\nspring.jpa.hibernate.naming-strategy=org.hibernate.cfg.ImprovedNamingStrategy\r\nspring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL8Dialect\r\n
+===================================================================
+diff --git a/src/main/resources/application.properties b/src/main/resources/application.properties
+--- a/src/main/resources/application.properties	
++++ b/src/main/resources/application.properties	
+@@ -1,10 +1,13 @@
+ # database configs
+-spring.datasource.url=jdbc:mysql://127.0.0.1:3306/db_springmvc
++spring.datasource.url=jdbc:mysql://127.0.0.1:3306/db_springmvc?useTimezone=true&serverTimezone=UTC
+ spring.datasource.username=root
+ spring.datasource.password=1234
+-spring.datasource.driverClassName=com.mysql.jdbc.Driver
++spring.datasource.driverClassName=com.mysql.cj.jdbc.Driver
+ spring.datasource.testWhileIdle=true
+ spring.datasource.validationQuery=SELECT 1
+ spring.jpa.show-sql=true
+ spring.jpa.hibernate.naming-strategy=org.hibernate.cfg.ImprovedNamingStrategy
+ spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL8Dialect
++spring.jpa.hibernate.ddl-auto=update
++spring.security.user.name = heron
++ spring.security.user.password = heron
+Index: src/main/java/br/com/alura/mvc/mudi/MudiApplication.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package br.com.alura.mvc.mudi;\r\n\r\nimport org.springframework.boot.SpringApplication;\r\nimport org.springframework.boot.autoconfigure.SpringBootApplication;\r\nimport org.springframework.cache.annotation.EnableCaching;\r\n@EnableCaching\r\n@SpringBootApplication\r\npublic class MudiApplication {\r\n\r\n\tpublic static void main(String[] args) {\r\n\t\tSpringApplication.run(MudiApplication.class, args);\r\n\t}\r\n\r\n}\r\n
+===================================================================
+diff --git a/src/main/java/br/com/alura/mvc/mudi/MudiApplication.java b/src/main/java/br/com/alura/mvc/mudi/MudiApplication.java
+--- a/src/main/java/br/com/alura/mvc/mudi/MudiApplication.java	
++++ b/src/main/java/br/com/alura/mvc/mudi/MudiApplication.java	
+@@ -8,6 +8,7 @@
+ public class MudiApplication {
+ 
+ 	public static void main(String[] args) {
++
+ 		SpringApplication.run(MudiApplication.class, args);
+ 	}
+ 
+Index: src/main/java/br/com/alura/mvc/mudi/security/SpringSecurity.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>//package br.com.alura.mvc.mudi.security;\r\n//\r\n//import br.com.alura.mvc.mudi.repository.UserRepository;\r\n//import br.com.alura.mvc.mudi.security.AuthenticationUser;\r\n//import br.com.alura.mvc.mudi.security.TokenService;\r\n//import org.springframework.beans.factory.annotation.Autowired;\r\n//import org.springframework.context.annotation.Bean;\r\n//import org.springframework.context.annotation.Configuration;\r\n//import org.springframework.http.HttpMethod;\r\n//import org.springframework.security.authentication.AuthenticationManager;\r\n//import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;\r\n//import org.springframework.security.config.annotation.web.builders.HttpSecurity;\r\n//import org.springframework.security.config.annotation.web.builders.WebSecurity;\r\n//import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;\r\n//import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;\r\n//import org.springframework.security.config.http.SessionCreationPolicy;\r\n//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;\r\n//import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;\r\n//\r\n//@EnableWebSecurity\r\n//@Configuration\r\n//public class SpringSecurity extends WebSecurityConfigurerAdapter {\r\n//\r\n//\r\n//    @Autowired\r\n//    AuthenticationUser authenticationUser;\r\n//    @Autowired\r\n//    private TokenService tokenService;\r\n//\r\n//    @Autowired\r\n//    private UserRepository userRepository;\r\n//\r\n//    @Override\r\n//    @Bean\r\n//    protected AuthenticationManager authenticationManager() throws Exception {\r\n//        return super.authenticationManager();\r\n//    }\r\n//\r\n//    //Configuracoes de autenticacao\r\n//    @Override\r\n//    protected void configure(AuthenticationManagerBuilder auth) throws Exception {\r\n//        auth.userDetailsService(authenticationUser).passwordEncoder(new BCryptPasswordEncoder());\r\n//    }\r\n//\r\n//    //Configuracoes de autorizacao\r\n//    @Override\r\n//    protected void configure(HttpSecurity http) throws Exception {\r\n//        http.authorizeRequests()\r\n//                .antMatchers(HttpMethod.GET, \"/topicos\").permitAll()\r\n//                .antMatchers(HttpMethod.GET, \"/topicos/*\").permitAll()\r\n//                .antMatchers(HttpMethod.POST, \"/auth\").permitAll()\r\n//                .anyRequest().authenticated()\r\n//                .and().csrf().disable()\r\n//                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);\r\n//\r\n//    }\r\n//\r\n//\r\n//    //Configuracoes de recursos estaticos(js, css, imagens, etc.)\r\n//    @Override\r\n//    public void configure(WebSecurity web) throws Exception {\r\n//    }\r\n//\r\n//}\r\n
+===================================================================
+diff --git a/src/main/java/br/com/alura/mvc/mudi/security/SpringSecurity.java b/src/main/java/br/com/alura/mvc/mudi/security/SpringSecurity.java
+--- a/src/main/java/br/com/alura/mvc/mudi/security/SpringSecurity.java	
++++ b/src/main/java/br/com/alura/mvc/mudi/security/SpringSecurity.java	
+@@ -1,8 +1,6 @@
+ //package br.com.alura.mvc.mudi.security;
+ //
+ //import br.com.alura.mvc.mudi.repository.UserRepository;
+-//import br.com.alura.mvc.mudi.security.AuthenticationUser;
+-//import br.com.alura.mvc.mudi.security.TokenService;
+ //import org.springframework.beans.factory.annotation.Autowired;
+ //import org.springframework.context.annotation.Bean;
+ //import org.springframework.context.annotation.Configuration;
+@@ -14,21 +12,25 @@
+ //import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+ //import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+ //import org.springframework.security.config.http.SessionCreationPolicy;
++//import org.springframework.security.core.userdetails.User;
++//import org.springframework.security.core.userdetails.UserDetails;
+ //import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+ //import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+ //
++//import javax.sql.DataSource;
++//import javax.xml.crypto.Data;
++//
+ //@EnableWebSecurity
+ //@Configuration
+ //public class SpringSecurity extends WebSecurityConfigurerAdapter {
+ //
+ //
+-//    @Autowired
+-//    AuthenticationUser authenticationUser;
++//
++//
+ //    @Autowired
+-//    private TokenService tokenService;
+-//
++//    private UserRepository userRepository;
+ //    @Autowired
+-//    private UserRepository userRepository;
++//    private DataSource dataSource;
+ //
+ //    @Override
+ //    @Bean
+@@ -36,10 +38,29 @@
+ //        return super.authenticationManager();
+ //    }
+ //
+-//    //Configuracoes de autenticacao
++//
+ //    @Override
+ //    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+-//        auth.userDetailsService(authenticationUser).passwordEncoder(new BCryptPasswordEncoder());
++//        BCryptPasswordEncoder bc = new BCryptPasswordEncoder();
++//
++//
++//
++////
++////        UserDetails user =
++////                User.builder()
++////                        .username("adm")
++////                        .password(bc.encode("master"))
++////                        .roles("ADM")
++////                        .build();
++////
++////        auth.jdbcAuthentication()
++////                .dataSource(dataSource)
++////                .passwordEncoder(bc)
++////                .withUser(user);
++////
++//
++//
++//
+ //    }
+ //
+ //    //Configuracoes de autorizacao
+@@ -59,6 +80,8 @@
+ //    //Configuracoes de recursos estaticos(js, css, imagens, etc.)
+ //    @Override
+ //    public void configure(WebSecurity web) throws Exception {
++//
++//
+ //    }
+ //
+ //}
