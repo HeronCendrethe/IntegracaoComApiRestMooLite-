@@ -4,16 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e5c9b95f-1e4c-46bb-99bc-8d7976c9fd3a" name="Changes" comment="atualização">
-      <change beforePath="$PROJECT_DIR$/dto/LoginForm.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/security/AuthenticationUser.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/security/SpringSecurity.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/security/TokenService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/br/com/alura/mvc/mudi/MudiApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/br/com/alura/mvc/mudi/MudiApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/br/com/alura/mvc/mudi/security/SpringSecurity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/br/com/alura/mvc/mudi/security/SpringSecurity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/logo.png" beforeDir="false" />
+    <list default="true" id="e5c9b95f-1e4c-46bb-99bc-8d7976c9fd3a" name="Changes" comment="SpringData e implementação com api rest funcionando novamente">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -23,7 +15,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="master" />
+        <entry key="$PROJECT_DIR$" value="main" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -92,6 +84,7 @@
     <recent_temporary>
       <list>
         <item itemvalue="Application.MudiApplication" />
+        <item itemvalue="Application.MudiApplication" />
         <item itemvalue="JUnit.br.com.alura.mvc.mudi.model in MooLite-Develop" />
         <item itemvalue="Application.MudiApplication" />
       </list>
@@ -127,7 +120,14 @@
       <option name="project" value="LOCAL" />
       <updated>1638324345525</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="SpringData e implementação com api rest funcionando novamente">
+      <created>1638413204758</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1638413204758</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -143,6 +143,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="atualização" />
-    <option name="LAST_COMMIT_MESSAGE" value="atualização" />
+    <MESSAGE value="SpringData e implementação com api rest funcionando novamente" />
+    <option name="LAST_COMMIT_MESSAGE" value="SpringData e implementação com api rest funcionando novamente" />
   </component>
 </project>
